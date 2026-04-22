@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organigrama del campus</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Mapa de importación para React y Lucide Icons -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.292.0"
+        }
+    }
+    </script>
+    
+    <!-- Compilador Babel para leer la sintaxis JSX en el navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans">
+    
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+          ChevronRight, ChevronDown, Building2, GraduationCap, 
+          BookOpen, Briefcase, Stethoscope, School, Library, 
+          Key, FolderOpen, FileText, Users, LifeBuoy, 
+          Database, Activity, Network, Link
+        } from 'lucide-react';
+
+        const campusData = {
+          name: "Estructura general del campus",
+          type: "root",
+          children: [
+            {
+              name: "Pregrado",
+              type: "category",
+              icon: "GraduationCap",
+              children: [
+                { name: "Aulas maestras", type: "master" },
+                { name: "Facultades / escuelas", type: "folder", children: [
+                    { name: "Programas", type: "folder", children: [
+                        { name: "Aulas de curso", type: "course" }
+                      ]
+                    }
+                  ]
+                },
+                { name: "Cursos transversales", type: "course" },
+                { name: "Apoyo académico", type: "support" }
+              ]
+            },
+            {
+              name: "Posgrados",
+              type: "category",
+              icon: "BookOpen",
+              children: [
+                { name: "Aulas maestras", type: "master" },
+                { name: "Especializaciones", type: "folder", children: [
+                    { name: "Programas", type: "folder", children: [
+                        { name: "Aulas de curso", type: "course" }
+                      ]
+                    }
+                  ]
+                },
+                { name: "Maestrías", type: "folder", children: [
+                    { name: "Programas", type: "folder", children: [
+                        { name: "Aulas de curso", type: "course" }
+                      ]
+                    }
+                  ]
+                },
+                { name: "Doctorados", type: "folder", children: [
+                    { name: "Programas", type: "folder", children: [
+                        { name: "Aulas de curso", type: "course" }
+                      ]
+                    }
+                  ]
+                },
+                { name: "Recursos comunes", type: "resource" }
+              ]
+            },
+            {
+              name: "Educación ejecutiva",
+              type: "category",
+              icon: "Briefcase",
+              children: [
+                { name: "Aulas maestras", type: "master" },
+                { name: "Diplomados", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Cursos cortos", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Programas corporativos", type: "folder", children: [
+                    { name: "Empresa / aliado", type: "folder", children: [
+                        { name: "Aulas de curso", type: "course" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              name: "Medicina",
+              type: "category",
+              icon: "Stethoscope",
+              children: [
+                { name: "Aulas maestras", type: "master" },
+                { name: "Pregrado", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Posgrados médicos", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Educación continua", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Simulación clínica", type: "practice" },
+                { name: "Prácticas / rotaciones", type: "practice" },
+                { name: "Recursos comunes", type: "resource" }
+              ]
+            },
+            {
+              name: "Escuela EIA",
+              type: "category",
+              icon: "School",
+              children: [
+                { name: "Aulas maestras", type: "master" },
+                { name: "Currículo y pedagogía", type: "folder", children: [
+                    { name: "Aulas de curso", type: "course" }
+                  ]
+                },
+                { name: "Administrativos", type: "users" },
+                { name: "Profesores", type: "users" },
+                { name: "Estudiantes", type: "users" },
+                { name: "Inducciones", type: "course" }
+              ]
+            },
+            {
+              name: "Eduteca",
+              type: "category",
+              icon: "Library",
+              children: [
+                { name: "Enlace a la eduteca", type: "link" }
+              ]
+            }
+          ]
+        };
+
+        const getIcon = (type, specificIcon) => {
+          if (specificIcon) {
+            switch (specificIcon) {
+              case 'GraduationCap': return <GraduationCap className="w-5 h-5 text-blue-600" />;
+              case 'BookOpen': return <BookOpen className="w-5 h-5 text-emerald-600" />;
+              case 'Briefcase': return <Briefcase className="w-5 h-5 text-amber-600" />;
+              case 'Stethoscope': return <Stethoscope className="w-5 h-5 text-red-600" />;
+              case 'School': return <School className="w-5 h-5 text-purple-600" />;
+              case 'Library': return <Library className="w-5 h-5 text-indigo-600" />;
+              default: break;
+            }
+          }
+
+          switch (type) {
+            case 'root': return <Building2 className="w-6 h-6 text-slate-800" />;
+            case 'master': return <Key className="w-4 h-4 text-amber-500" />;
+            case 'folder': return <FolderOpen className="w-4 h-4 text-sky-500" />;
+            case 'course': return <FileText className="w-4 h-4 text-slate-600" />;
+            case 'support': return <LifeBuoy className="w-4 h-4 text-rose-500" />;
+            case 'resource': return <Database className="w-4 h-4 text-teal-500" />;
+            case 'practice': return <Activity className="w-4 h-4 text-red-400" />;
+            case 'users': return <Users className="w-4 h-4 text-indigo-400" />;
+            case 'link': return <Link className="w-4 h-4 text-blue-500" />;
+            default: return <Network className="w-4 h-4 text-slate-400" />;
+          }
+        };
+
+        const TreeNode = ({ node, level = 0, isLast = true }) => {
+          const [isOpen, setIsOpen] = useState(level < 2);
+          const hasChildren = node.children && node.children.length > 0;
+
+          const toggleOpen = () => {
+            if (hasChildren) setIsOpen(!isOpen);
+          };
+
+          return (
+            <div className="relative">
+              {level > 0 && (
+                <div 
+                  className="absolute border-l-2 border-b-2 border-slate-200 rounded-bl"
+                  style={{ left: '-1.5rem', top: '-1rem', height: '2.5rem', width: '1rem' }}
+                />
+              )}
+              
+              {level > 0 && !isLast && (
+                <div 
+                  className="absolute border-l-2 border-slate-200"
+                  style={{ left: '-1.5rem', top: '1.5rem', bottom: '-1rem' }}
+                />
+              )}
+
+              <div 
+                className={`flex items-center py-2 px-3 my-1 rounded-lg border transition-colors ${
+                  hasChildren ? 'cursor-pointer hover:bg-slate-50' : 'bg-white'
+                } ${level === 0 ? 'bg-slate-100 border-slate-300 shadow-sm' : 'border-slate-200/60'}`}
+                onClick={toggleOpen}
+              >
+                <div className="flex items-center w-6 justify-center mr-1">
+                  {hasChildren ? (
+                    isOpen ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />
+                  ) : (
+                    <div className="w-4 h-4" />
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  {getIcon(node.type, node.icon)}
+                  <span className={`text-sm ${level === 0 ? 'font-bold text-slate-800 text-base' : level === 1 ? 'font-semibold text-slate-700' : 'text-slate-600'}`}>
+                    {node.name}
+                  </span>
+                  {node.type === 'master' && <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 ml-2">Plantilla</span>}
+                </div>
+              </div>
+
+              {hasChildren && isOpen && (
+                <div className="ml-6 relative mt-1">
+                  {node.children.map((child, index) => (
+                    <TreeNode 
+                      key={index} 
+                      node={child} 
+                      level={level + 1} 
+                      isLast={index === node.children.length - 1}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        function App() {
+          return (
+            <div className="p-8">
+              <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+                <header className="mb-8 border-b border-slate-100 pb-6">
+                  <h1 className="text-2xl font-bold text-slate-800">Organigrama de la estructura del campus</h1>
+                  <p className="text-slate-500 mt-2">Visión jerárquica de áreas, programas y recursos de aprendizaje.</p>
+                </header>
+
+                <div className="pl-6">
+                  <TreeNode node={campusData} level={0} isLast={true} />
+                </div>
+
+                <div className="mt-12 pt-6 border-t border-slate-100 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-2"><Key className="w-4 h-4 text-amber-500" /> Aulas maestras</div>
+                  <div className="flex items-center gap-2"><FolderOpen className="w-4 h-4 text-sky-500" /> Categorías / Programas</div>
+                  <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-slate-600" /> Aulas de curso</div>
+                  <div className="flex items-center gap-2"><Database className="w-4 h-4 text-teal-500" /> Recursos / Componentes</div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
